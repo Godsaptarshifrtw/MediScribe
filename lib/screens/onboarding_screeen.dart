@@ -1,51 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../controllers/component_controllers/onboarding_controller.dart';
 
-class OnboardingScreen extends StatefulWidget {
-  const OnboardingScreen({Key? key}) : super(key: key);
 
-  @override
-  _OnboardingScreenState createState() => _OnboardingScreenState();
-}
-
-class _OnboardingScreenState extends State<OnboardingScreen> {
-  final PageController _controller = PageController();
-  int _currentPage = 0;
-
-  final List<Map<String, String>> onboardingData = [
-    {
-      "title": "Understand Your Medical Reports",
-      "description": "MediScribe simplifies complex medical terms into plain language.",
-      "image": "assets/1st.png"
-    },
-    {
-      "title": "Upload or Scan with Ease",
-      "description": "Just click a photo or upload your medical report – we'll take care of the rest.",
-      "image": "assets/2nd.png"
-    },
-    {
-      "title": "Instant AI-Powered Insights",
-      "description": "See highlights, translated results, and get smart doctor questions.",
-      "image": "assets/3rd.png"
-    },
-  ];
+class OnboardingScreen extends StatelessWidget {
+  final OnboardingController controller = Get.put(OnboardingController());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF6F0FB), // Light purple
+      backgroundColor: const Color(0xFFF6F0FB),
       body: SafeArea(
         child: Column(
           children: [
             Expanded(
               child: PageView.builder(
-                controller: _controller,
-                itemCount: onboardingData.length,
-                onPageChanged: (int index) {
-                  setState(() {
-                    _currentPage = index;
-                  });
-                },
+                controller: controller.pageController,
+                itemCount: controller.onboardingData.length,
+                onPageChanged: (index) => controller.currentPage.value = index,
                 itemBuilder: (_, index) {
+                  var data = controller.onboardingData[index];
                   return Padding(
                     padding: const EdgeInsets.all(24.0),
                     child: Column(
@@ -53,7 +27,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       children: [
                         const SizedBox(height: 30),
                         Text(
-                          onboardingData[index]['title']!,
+                          data['title']!,
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                             fontSize: 24,
@@ -63,7 +37,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         ),
                         const SizedBox(height: 20),
                         Text(
-                          onboardingData[index]['description']!,
+                          data['description']!,
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                             fontSize: 16,
@@ -72,7 +46,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         ),
                         const SizedBox(height: 40),
                         Image.asset(
-                          onboardingData[index]['image']!,
+                          data['image']!,
                           height: 250,
                         ),
                       ],
@@ -81,39 +55,34 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 },
               ),
             ),
-            Row(
+            Obx(() => Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(
-                onboardingData.length,
+                controller.onboardingData.length,
                     (index) => Container(
                   margin: const EdgeInsets.symmetric(horizontal: 6),
-                  width: _currentPage == index ? 12 : 8,
-                  height: _currentPage == index ? 12 : 8,
+                  width: controller.currentPage.value == index ? 12 : 8,
+                  height: controller.currentPage.value == index ? 12 : 8,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: _currentPage == index
+                    color: controller.currentPage.value == index
                         ? Colors.deepPurple
                         : Colors.deepPurple.shade100,
                   ),
                 ),
               ),
-            ),
+            )),
             const SizedBox(height: 30),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: Row(
+              child: Obx(() => Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   TextButton(
-                    child: const Text(
-                      "Skip",
-                      style: TextStyle(color: Colors.deepPurple),
-                    ),
-                    onPressed: () {
-                      // Handle skip
-                    },
+                    child: const Text("Skip", style: TextStyle(color: Colors.deepPurple)),
+                    onPressed: controller.skip,
                   ),
-                  _currentPage == onboardingData.length - 1
+                  controller.currentPage.value == controller.onboardingData.length - 1
                       ? ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.deepPurple,
@@ -122,28 +91,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: const Text(
-                      "Get Started",
-                      style: TextStyle(color: Colors.white),
-                    ),
+                    child: const Text("Get Started", style: TextStyle(color: Colors.white)),
                     onPressed: () {
-                      // Handle "Get Started"
+                      // Navigate to home or login screen
                     },
                   )
                       : TextButton(
-                    child: const Text(
-                      "Next",
-                      style: TextStyle(color: Colors.deepPurple),
-                    ),
-                    onPressed: () {
-                      _controller.nextPage(
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeIn,
-                      );
-                    },
+                    child: const Text("Next", style: TextStyle(color: Colors.deepPurple)),
+                    onPressed: controller.nextPage,
                   ),
                 ],
-              ),
+              )),
             ),
             const SizedBox(height: 30),
           ],
