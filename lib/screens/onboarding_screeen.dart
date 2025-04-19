@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/component_controllers/onboarding_controller.dart';
 
-
 class OnboardingScreen extends StatelessWidget {
   final OnboardingController controller = Get.put(OnboardingController());
 
@@ -20,46 +19,18 @@ class OnboardingScreen extends StatelessWidget {
                 onPageChanged: (index) => controller.currentPage.value = index,
                 itemBuilder: (_, index) {
                   var data = controller.onboardingData[index];
-                  return Padding(
-                    padding: const EdgeInsets.all(24.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const SizedBox(height: 30),
-                        Text(
-                          data['title']!,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black87,
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        Text(
-                          data['description']!,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.black54,
-                          ),
-                        ),
-                        const SizedBox(height: 40),
-                        Image.asset(
-                          data['image']!,
-                          height: 250,
-                        ),
-                      ],
-                    ),
-                  );
+                  return _buildPageContent(data['title']!, data['description']!, data['image']!);
                 },
               ),
             ),
+
+            // Dot Indicators
             Obx(() => Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(
                 controller.onboardingData.length,
-                    (index) => Container(
+                    (index) => AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
                   margin: const EdgeInsets.symmetric(horizontal: 6),
                   width: controller.currentPage.value == index ? 12 : 8,
                   height: controller.currentPage.value == index ? 12 : 8,
@@ -72,40 +43,98 @@ class OnboardingScreen extends StatelessWidget {
                 ),
               ),
             )),
+
             const SizedBox(height: 30),
+
+            // Bottom Buttons
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24.0),
               child: Obx(() => Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   TextButton(
-                    child: const Text("Skip", style: TextStyle(color: Colors.deepPurple)),
                     onPressed: controller.skip,
+                    child: const Text(
+                      "Skip",
+                      style: TextStyle(
+                        color: Colors.deepPurple,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                   ),
                   controller.currentPage.value == controller.onboardingData.length - 1
                       ? ElevatedButton(
+                    onPressed: () {
+                      // Navigate to next screen
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.deepPurple,
                       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-                    child: const Text("Get Started", style: TextStyle(color: Colors.white)),
-                    onPressed: () {
-                      // Navigate to home or login screen
-                    },
+                    child: const Text(
+                      "Get Started",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   )
                       : TextButton(
-                    child: const Text("Next", style: TextStyle(color: Colors.deepPurple)),
                     onPressed: controller.nextPage,
+                    child: const Text(
+                      "Next",
+                      style: TextStyle(
+                        color: Colors.deepPurple,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                   ),
                 ],
               )),
             ),
+
             const SizedBox(height: 30),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildPageContent(String title, String description, String imagePath) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const SizedBox(height: 30),
+          Text(
+            title,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
+          ),
+          const SizedBox(height: 20),
+          Text(
+            description,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 16,
+              color: Colors.black54,
+            ),
+          ),
+          const SizedBox(height: 40),
+          Image.asset(
+            imagePath,
+            height: 250,
+            fit: BoxFit.contain,
+          ),
+        ],
       ),
     );
   }

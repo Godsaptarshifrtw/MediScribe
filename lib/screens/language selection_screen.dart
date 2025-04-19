@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/component_controllers/language_controller.dart';
 
-
 class LanguageScreen extends StatelessWidget {
   LanguageScreen({super.key});
 
@@ -19,9 +18,9 @@ class LanguageScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // App Name at top-left
-              const Text(
-                'MediScribe',
-                style: TextStyle(
+              Text(
+                'app_name'.tr,
+                style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
                   color: Colors.deepPurple,
@@ -31,10 +30,10 @@ class LanguageScreen extends StatelessWidget {
               const SizedBox(height: 20),
 
               // Heading
-              const Center(
+              Center(
                 child: Text(
-                  'Choose Your Language',
-                  style: TextStyle(
+                  'choose_language'.tr,
+                  style: const TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF5E35B1),
@@ -62,11 +61,12 @@ class LanguageScreen extends StatelessWidget {
                 child: ElevatedButton.icon(
                   onPressed: controller.proceed,
                   icon: const Icon(Icons.arrow_forward),
-                  label: const Text('Continue'),
+                  label: Text('continue'.tr),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.deepPurple,
                     foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 14),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 30, vertical: 14),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -101,7 +101,8 @@ class LanguageScreen extends StatelessWidget {
               : [],
         ),
         child: ListTile(
-          contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+          contentPadding:
+          const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
           leading: Icon(icon, color: isSelected ? Colors.white : Colors.black),
           title: Text(
             text,

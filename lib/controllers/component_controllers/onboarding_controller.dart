@@ -7,18 +7,18 @@ class OnboardingController extends GetxController {
 
   final List<Map<String, String>> onboardingData = [
     {
-      "title": "Understand Your Medical Reports",
-      "description": "MediScribe simplifies complex medical terms into plain language.",
+      "title": "আপনার মেডিকেল রিপোর্ট বুঝুন",
+      "description": "MediScribe জটিল মেডিকেল টার্ম সহজ ভাষায় ব্যাখ্যা করে।",
       "image": "assets/1st.png"
     },
     {
-      "title": "Upload or Scan with Ease",
-      "description": "Just click a photo or upload your medical report – we'll take care of the rest.",
+      "title": "সহজেই আপলোড বা স্ক্যান করুন",
+      "description": "একটি ছবি তুলুন বা রিপোর্ট আপলোড করুন – আমরা বাকিটা দেখবো।",
       "image": "assets/2nd.png"
     },
     {
-      "title": "Instant AI-Powered Insights",
-      "description": "See highlights, translated results, and get smart doctor questions.",
+      "title": "তাত্ক্ষণিক AI বিশ্লেষণ",
+      "description": "হাইলাইট, অনুবাদিত রেজাল্ট এবং বুদ্ধিমান প্রশ্নাবলি পান।",
       "image": "assets/3rd.png"
     },
   ];
