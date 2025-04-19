@@ -1,3 +1,4 @@
+import 'package:aignite2025_oops/controllers/component_controllers/image_controller.dart';
 import 'package:aignite2025_oops/screens/home_screen.dart';
 import 'package:aignite2025_oops/screens/onboarding_screeen.dart';
 
@@ -13,6 +14,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   Get.put(PdfController());
+  Get.put(ImageController());
   runApp(const MyApp());
 }
 
@@ -27,10 +29,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      initialRoute: '/onboarding', // ✅ Launch with onboarding screen
+      initialRoute: '/home', // ✅ Launch with onboarding screen
       getPages: [
         GetPage(name: '/onboarding', page: () =>  OnboardingScreen()),
         GetPage(name: '/home', page: () =>  HomeScreen()),
+
       ],
     );
   }
