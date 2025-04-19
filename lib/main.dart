@@ -6,10 +6,9 @@ import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 import 'controllers/component_controllers/image_controller.dart';
-import 'controllers/component_controllers/language_controller.dart';
 import 'controllers/component_controllers/pdf_controller.dart';
- // ✅ Import your LanguageController
 import 'screens/home_screen.dart';
+ // <-- Import your translations file
 import 'firebase_options.dart';
 
 void main() async {
@@ -18,10 +17,9 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // Register controllers
+  // Register your controllers
   Get.put(PdfController());
   Get.put(ImageController());
-  Get.put(LanguageController()); // ✅ Register LanguageController
 
   runApp(const MyApp());
 }
@@ -31,27 +29,22 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final LanguageController langController = Get.find();
-
-    return Obx(() {
-      return GetMaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'MediScribe',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        ),
-        translations: AppTranslations(), // 🌐 i18n map
-        locale: langController.selectedLanguage.isNotEmpty
-            ? Locale(langController.selectedLanguage.value)
-            : const Locale('en'),
-        fallbackLocale: const Locale('en'),
-        initialRoute: '/home',
-        getPages: [
-          GetPage(name: '/language', page: () => LanguageScreen()),
-          GetPage(name: '/onboarding', page: () => OnboardingScreen()),
-          GetPage(name: '/home', page: () => HomeScreen()),
-        ],
-      );
-    });
+    return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'MediScribe',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+      ),
+      // 🔤 Add translations
+      translations: AppTranslations(), // <-- This class contains your i18n map
+      locale: const Locale('en'),      // 🌐 Initial language (you can change dynamically)
+      fallbackLocale: const Locale('en'), // 👇 In case translation key not found
+      initialRoute: '/language',
+      getPages: [
+        GetPage(name: '/language', page: () =>  LanguageScreen()),
+        GetPage(name: '/onboarding', page: () =>  OnboardingScreen()),
+        GetPage(name: '/home', page: () =>  HomeScreen()),
+      ],
+    );
   }
 }

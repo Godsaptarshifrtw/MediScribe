@@ -1,12 +1,12 @@
-import 'package:aignite2025_oops/screens/register_screen.dart';
+import 'package:aignite2025_oops/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../controllers/page_controllers/login_page_controller.dart';
+import '../controllers/page_controllers/register_page_controller.dart';
 
-class LoginScreen extends StatelessWidget {
-  LoginScreen({super.key});
+class RegisterScreen extends StatelessWidget {
+  RegisterScreen({super.key});
 
-  final loginController = Get.find<LoginController>();
+  final registerController = Get.find<RegisterController>();
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class LoginScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       body: Stack(
         children: [
-          // Background with curved bottom
+          // Background with curved image
           ClipPath(
             clipper: BottomCurveClipper(),
             child: Container(
@@ -24,7 +24,7 @@ class LoginScreen extends StatelessWidget {
               width: double.infinity,
               color: Colors.white,
               child: Image.asset(
-                'assets/login.png',
+                'assets/register.jpg', // Use the uploaded image path
                 fit: BoxFit.cover,
               ),
             ),
@@ -33,10 +33,10 @@ class LoginScreen extends StatelessWidget {
           // Foreground content
           SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.only(top: 250), // push down under image
+              padding: const EdgeInsets.only(top: 250),
               child: Column(
                 children: [
-                  // Login card
+                  // Registration Card
                   Container(
                     margin: const EdgeInsets.symmetric(horizontal: 24),
                     padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
@@ -54,7 +54,7 @@ class LoginScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         const Text(
-                          "Login",
+                          "Register",
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
@@ -63,23 +63,69 @@ class LoginScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 24),
 
-                        // Username
+                        // Full Name
                         TextField(
                           decoration: InputDecoration(
-                            hintText: "Username",
-                            prefixIcon: const Icon(Icons.person_outline),
+                            hintText: "Full Name",
+                            prefixIcon: const Icon(Icons.person),
                             filled: true,
                             fillColor: const Color(0xFFF4F4F4),
-                            contentPadding: const EdgeInsets.symmetric(
-                              vertical: 16,
-                              horizontal: 20,
-                            ),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20),
                               borderSide: BorderSide.none,
                             ),
                           ),
-                          onChanged: (val) => loginController.email.value = val,
+                          onChanged: (val) => registerController.name.value = val,
+                        ),
+                        const SizedBox(height: 16),
+
+                        // Email
+                        TextField(
+                          decoration: InputDecoration(
+                            hintText: "Email",
+                            prefixIcon: const Icon(Icons.email),
+                            filled: true,
+                            fillColor: const Color(0xFFF4F4F4),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: BorderSide.none,
+                            ),
+                          ),
+                          onChanged: (val) => registerController.email.value = val,
+                        ),
+                        const SizedBox(height: 16),
+
+                        // Phone
+                        TextField(
+                          keyboardType: TextInputType.phone,
+                          decoration: InputDecoration(
+                            hintText: "Phone",
+                            prefixIcon: const Icon(Icons.phone),
+                            filled: true,
+                            fillColor: const Color(0xFFF4F4F4),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: BorderSide.none,
+                            ),
+                          ),
+                          onChanged: (val) => registerController.phone.value = val,
+                        ),
+                        const SizedBox(height: 16),
+
+                        // Age
+                        TextField(
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            hintText: "Age",
+                            prefixIcon: const Icon(Icons.cake),
+                            filled: true,
+                            fillColor: const Color(0xFFF4F4F4),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: BorderSide.none,
+                            ),
+                          ),
+                          onChanged: (val) => registerController.age.value = val,
                         ),
                         const SizedBox(height: 16),
 
@@ -88,29 +134,25 @@ class LoginScreen extends StatelessWidget {
                           obscureText: true,
                           decoration: InputDecoration(
                             hintText: "Password",
-                            prefixIcon: const Icon(Icons.lock_outline),
+                            prefixIcon: const Icon(Icons.lock),
                             filled: true,
                             fillColor: const Color(0xFFF4F4F4),
-                            contentPadding: const EdgeInsets.symmetric(
-                              vertical: 16,
-                              horizontal: 20,
-                            ),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20),
                               borderSide: BorderSide.none,
                             ),
                           ),
-                          onChanged: (val) => loginController.password.value = val,
+                          onChanged: (val) => registerController.password.value = val,
                         ),
                         const SizedBox(height: 24),
 
-                        // Login button
+                        // Register button
                         Obx(() => SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                            onPressed: loginController.isLoading.value
+                            onPressed: registerController.isLoading.value
                                 ? null
-                                : loginController.login,
+                                : registerController.register,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFF9575CD),
                               shape: RoundedRectangleBorder(
@@ -118,12 +160,12 @@ class LoginScreen extends StatelessWidget {
                               ),
                               padding: const EdgeInsets.symmetric(vertical: 14),
                             ),
-                            child: loginController.isLoading.value
+                            child: registerController.isLoading.value
                                 ? const CircularProgressIndicator(
                               color: Colors.white,
                             )
                                 : const Text(
-                              "LOGIN",
+                              "REGISTER",
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16,
@@ -137,13 +179,13 @@ class LoginScreen extends StatelessWidget {
 
                   const SizedBox(height: 16),
 
-                  // Signup link
+                  // Already registered? Login Now
                   TextButton(
                     onPressed: () {
-                      Get.to(RegisterScreen());
+                      Get.to(LoginScreen());
                     },
                     child: const Text(
-                      "Not yet registered? SignUp Now",
+                      "Already have an account? Login Now",
                       style: TextStyle(
                         color: Color(0xFF6A1B9A),
                         fontSize: 14,
@@ -160,7 +202,7 @@ class LoginScreen extends StatelessWidget {
   }
 }
 
-// Custom clipper to curve the bottom of the image
+// Custom clipper
 class BottomCurveClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
