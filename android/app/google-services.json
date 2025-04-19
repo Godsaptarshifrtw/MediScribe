@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "29248417073",
+    "project_id": "genaiignite-01",
+    "storage_bucket": "genaiignite-01.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:29248417073:android:98fd33fd8cf9f365b2d410",
+        "android_client_info": {
+          "package_name": "com.example.aignite2025_oops"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAq3v3aWp_1Ej3CQVBoEcbQl-ywaPbHzpc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
