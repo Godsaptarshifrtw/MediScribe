@@ -62,7 +62,7 @@ class RegisterScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 24),
 
-                        // Name
+                        // Full Name
                         TextField(
                           decoration: InputDecoration(
                             hintText: "Full Name",
@@ -91,6 +91,23 @@ class RegisterScreen extends StatelessWidget {
                             ),
                           ),
                           onChanged: (val) => registerController.email.value = val,
+                        ),
+                        const SizedBox(height: 16),
+
+                        // Phone
+                        TextField(
+                          keyboardType: TextInputType.phone,
+                          decoration: InputDecoration(
+                            hintText: "Phone",
+                            prefixIcon: const Icon(Icons.phone),
+                            filled: true,
+                            fillColor: const Color(0xFFF4F4F4),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: BorderSide.none,
+                            ),
+                          ),
+                          onChanged: (val) => registerController.phone.value = val,
                         ),
                         const SizedBox(height: 16),
 
