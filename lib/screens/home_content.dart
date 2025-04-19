@@ -1,10 +1,11 @@
 import 'dart:io';
-import 'package:aignite2025_oops/screens/pdf_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:get/get.dart';
 import '../controllers/component_controllers/pdf_controller.dart';
+import '../controllers/component_controllers/language_controller.dart';
+import 'pdf_preview.dart';
 
 class HomeContent extends StatelessWidget {
   const HomeContent({super.key});
@@ -12,16 +13,33 @@ class HomeContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final pdfController = Get.find<PdfController>();
+    final langController = Get.find<LanguageController>();
     final screenWidth = MediaQuery.of(context).size.width;
     final titleFont = screenWidth > 600 ? 26.0 : 22.0;
     final subtitleFont = screenWidth > 600 ? 16.0 : 13.0;
     final tilePadding = screenWidth > 600 ? 24.0 : 16.0;
 
     final List<_Feature> features = [
-      _Feature("Select report from Gallery", "Scan and get insights",
-          Icons.upload_file, const Color(0xFF7E57C2)),
-      _Feature("Previous Reports", "Quick access to history", Icons.history,
-          const Color(0xFF6A1B9A)),
+      _Feature(
+        langController.selectedLanguage.value == 'bn'
+            ? 'গ্যালারি থেকে রিপোর্ট নির্বাচন করুন'
+            : 'Select report from Gallery',
+        langController.selectedLanguage.value == 'bn'
+            ? 'স্ক্যান করুন এবং তথ্য পান'
+            : 'Scan and get insights',
+        Icons.upload_file,
+        const Color(0xFF7E57C2),
+      ),
+      _Feature(
+        langController.selectedLanguage.value == 'bn'
+            ? 'পূর্ববর্তী রিপোর্ট'
+            : 'Previous Reports',
+        langController.selectedLanguage.value == 'bn'
+            ? 'আপনার পূর্বের রিপোর্ট অ্যাক্সেস করুন'
+            : 'Quick access to history',
+        Icons.history,
+        const Color(0xFF6A1B9A),
+      ),
     ];
 
     return SafeArea(
@@ -31,14 +49,13 @@ class HomeContent extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildHeader(titleFont),
+              _buildHeader(titleFont, langController),
               const SizedBox(height: 8),
               ...features.map((f) => Padding(
                 padding: const EdgeInsets.only(bottom: 28),
-                child: _buildLargeFeatureTile(
-                    context, f, subtitleFont, tilePadding, pdfController),
+                child: _buildLargeFeatureTile(context, f, subtitleFont, tilePadding, pdfController, langController),
               )),
-              const SizedBox(height: 120),
+              const SizedBox(height: 120), // Additional space for layout balance
             ],
           ),
         ),
@@ -46,14 +63,14 @@ class HomeContent extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(double fontSize) {
+  Widget _buildHeader(double fontSize, LanguageController langController) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            "MediScribe",
+            langController.selectedLanguage.value == 'bn' ? 'মেডিস্ক্রাইব' : 'MediScribe',
             style: GoogleFonts.roboto(
               fontSize: fontSize,
               fontWeight: FontWeight.bold,
@@ -65,10 +82,8 @@ class HomeContent extends StatelessWidget {
               icon: const Icon(Icons.menu, color: Color(0xFF9575CD)),
               onPressed: () {
                 final RenderBox button = context.findRenderObject() as RenderBox;
-                final RenderBox overlay =
-                Overlay.of(context).context.findRenderObject() as RenderBox;
-                final Offset offset =
-                button.localToGlobal(Offset.zero, ancestor: overlay);
+                final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+                final Offset offset = button.localToGlobal(Offset.zero, ancestor: overlay);
                 final Size size = button.size;
 
                 showMenu<String>(
@@ -80,8 +95,8 @@ class HomeContent extends StatelessWidget {
                     0,
                   ),
                   items: [
-                    PopupMenuItem(value: 'en', child: Text('English')),
-                    PopupMenuItem(value: 'hi', child: Text('हिंदी')),
+                    PopupMenuItem(value: 'en', child: Text(langController.selectedLanguage.value == 'bn' ? 'Switch to English' : 'ইংরেজিতে পরিবর্তন')),
+                    PopupMenuItem(value: 'hi', child: const Text('हिंदी')),
                   ],
                   color: const Color(0xFFF3E5F5),
                   shape: RoundedRectangleBorder(
@@ -101,7 +116,8 @@ class HomeContent extends StatelessWidget {
       _Feature feature,
       double subtitleFont,
       double tilePadding,
-      PdfController pdfController) {
+      PdfController pdfController,
+      LanguageController langController) {
     return GestureDetector(
       onTap: () async {
         if (feature.title == "Select report from Gallery") {
@@ -116,11 +132,11 @@ class HomeContent extends StatelessWidget {
             Get.to(() => const PdfPreviewScreen());
 
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('PDF selected successfully')),
+              SnackBar(content: Text(langController.selectedLanguage.value == 'bn' ? 'পিডিএফ সফলভাবে নির্বাচিত হয়েছে' : 'PDF selected successfully')),
             );
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('No PDF selected')),
+              SnackBar(content: Text(langController.selectedLanguage.value == 'bn' ? 'কোনো পিডিএফ নির্বাচন করা হয়নি' : 'No PDF selected')),
             );
           }
         } else {
@@ -129,7 +145,7 @@ class HomeContent extends StatelessWidget {
       },
       child: Container(
         width: double.infinity,
-        height: 110,
+        height: 130, // Increased height for bigger boxes
         decoration: BoxDecoration(
           color: feature.color.withOpacity(0.1),
           borderRadius: BorderRadius.circular(18),
@@ -150,9 +166,9 @@ class HomeContent extends StatelessWidget {
         child: Row(
           children: [
             CircleAvatar(
-              radius: 28,
+              radius: 32, // Increased radius for the avatar icon
               backgroundColor: feature.color,
-              child: Icon(feature.icon, color: Colors.white, size: 28),
+              child: Icon(feature.icon, color: Colors.white, size: 32), // Increased icon size
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -161,7 +177,7 @@ class HomeContent extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    feature.title,
+                    langController.selectedLanguage.value == 'bn' ? 'গ্যালারি থেকে রিপোর্ট নির্বাচন করুন' : feature.title,
                     style: GoogleFonts.roboto(
                       fontWeight: FontWeight.w600,
                       fontSize: subtitleFont + 4,
@@ -170,7 +186,7 @@ class HomeContent extends StatelessWidget {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    feature.subtitle,
+                    langController.selectedLanguage.value == 'bn' ? 'স্ক্যান করুন এবং তথ্য পান' : feature.subtitle,
                     style: GoogleFonts.roboto(
                       fontSize: subtitleFont,
                       color: Colors.black54,

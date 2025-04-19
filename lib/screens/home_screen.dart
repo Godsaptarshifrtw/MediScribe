@@ -2,25 +2,45 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'home_content.dart';
-import '/controllers/component_controllers/pdf_controller.dart';
+import '../controllers/component_controllers/language_controller.dart';
 import '/controllers/component_controllers/image_controller.dart';
+import 'home_content.dart';
 import 'img_preview.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
 
   final RxInt _selectedIndex = 0.obs;
+  final langController = Get.find<LanguageController>();
 
   final List<Widget> _screens = [
     const HomeContent(),
-    const ProfileScreen(),
+    const Placeholder(), // Can be replaced with any screen or removed
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: Obx(() => Text(
+          langController.selectedLanguage.value == 'bn' ? 'হোম স্ক্রীন' : 'Home Screen',
+        )),
+        actions: [
+          Obx(() {
+            final isBengali = langController.selectedLanguage.value == 'bn';
+            return IconButton(
+              icon: const Icon(Icons.language),
+              tooltip: isBengali ? 'Switch to English' : 'বাংলায় যান',
+              onPressed: () {
+                final newLang = isBengali ? 'en' : 'bn';
+                langController.selectLanguage(newLang);
+              },
+            );
+          }),
+        ],
+        backgroundColor: const Color(0xFF9575CD),
+      ),
       body: Obx(() => _screens[_selectedIndex.value]),
       floatingActionButton: FloatingActionButton(
         backgroundColor: const Color(0xFF9575CD),
@@ -32,16 +52,14 @@ class HomeScreen extends StatelessWidget {
             final imageFile = File(pickedFile.path);
             Get.find<ImageController>().pickImage(imageFile);
 
-            // Show snackbar
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Image captured successfully')),
+              SnackBar(content: Text(_getTranslatedText('Image captured successfully'))),
             );
 
-            // TODO: Navigate to preview screen if desired
-             Get.to(() => ImagePreviewScreen());
+            Get.to(() => ImagePreviewScreen());
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('No image captured')),
+              SnackBar(content: Text(_getTranslatedText('No image captured'))),
             );
           }
         },
@@ -79,6 +97,7 @@ class HomeScreen extends StatelessWidget {
   }) {
     return Obx(() {
       final isSelected = _selectedIndex.value == index;
+      final translatedLabel = _getTranslatedText(label);
       return GestureDetector(
         onTap: () => _selectedIndex.value = index,
         child: Column(
@@ -91,7 +110,7 @@ class HomeScreen extends StatelessWidget {
               color: isSelected ? const Color(0xFF7E57C2) : Colors.black54,
             ),
             Text(
-              label,
+              translatedLabel,
               style: TextStyle(
                 fontSize: 13,
                 color: isSelected ? const Color(0xFF7E57C2) : Colors.black54,
@@ -102,15 +121,22 @@ class HomeScreen extends StatelessWidget {
       );
     });
   }
-}
 
-class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+  String _getTranslatedText(String text) {
+    final lang = langController.selectedLanguage.value;
 
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Profile Screen'),
-    );
+    if (lang == 'bn') {
+      switch (text) {
+        case 'Home':
+          return 'বাড়ি';
+        case 'Profile':
+          return 'প্রোফাইল';
+        case 'Image captured successfully':
+          return 'ছবি সফলভাবে ক্যাপচার করা হয়েছে';
+        case 'No image captured':
+          return 'কোনো ছবি ক্যাপচার করা হয়নি';
+      }
+    }
+    return text;
   }
 }
