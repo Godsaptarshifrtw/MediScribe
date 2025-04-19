@@ -7,7 +7,7 @@ import 'firebase_options.dart';
 
 import 'controllers/component_controllers/pdf_controller.dart';
 import 'screens/home_screen.dart';
-
+import 'controllers/component_controllers/image_controller.dart';
 
 
 void main() async {
@@ -16,6 +16,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   Get.put(PdfController());
+  Get.put(ImageController());
   runApp(const MyApp());
 }
 
@@ -30,7 +31,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      initialRoute: '/language',
+      initialRoute: '/home',
       getPages: [
         GetPage(name: '/language', page: () =>  LanguageScreen()),
         GetPage(name: '/onboarding', page: () =>  OnboardingScreen()),
