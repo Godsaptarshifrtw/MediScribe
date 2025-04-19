@@ -1,6 +1,8 @@
-import 'package:aignite2025_oops/screens/home_image_upload_screen.dart';
+import 'package:aignite2025_oops/screens/home_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart'; // ✅ Import GetX
+import 'controllers/component_controllers/pdf_controller.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -8,28 +10,27 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
-  runApp(MyApp());
+  Get.put(PdfController());
+  runApp(const MyApp());
 }
-
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp( // ✅ Use GetMaterialApp
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      initialRoute: 'home',
-      routes: {
-        'home' : (context) => HomeScreen(),
-      },
+      initialRoute: '/home',
+      getPages: [ // ✅ Use GetPages for navigation
+        GetPage(name: '/home', page: () => HomeScreen()),
+        // You can add more routes like:
+        // GetPage(name: '/upload', page: () => UploadScreen()),
+      ],
     );
   }
 }
-
