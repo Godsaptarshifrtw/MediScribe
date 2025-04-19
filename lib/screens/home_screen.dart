@@ -1,7 +1,11 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'home_content.dart';
 import '/controllers/component_controllers/pdf_controller.dart';
+import '/controllers/component_controllers/image_controller.dart';
+import 'img_preview.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
@@ -20,8 +24,26 @@ class HomeScreen extends StatelessWidget {
       body: Obx(() => _screens[_selectedIndex.value]),
       floatingActionButton: FloatingActionButton(
         backgroundColor: const Color(0xFF9575CD),
-        onPressed: () {
-          // Optional FAB action
+        onPressed: () async {
+          final picker = ImagePicker();
+          final pickedFile = await picker.pickImage(source: ImageSource.camera);
+
+          if (pickedFile != null) {
+            final imageFile = File(pickedFile.path);
+            Get.find<ImageController>().pickImage(imageFile);
+
+            // Show snackbar
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Image captured successfully')),
+            );
+
+            // TODO: Navigate to preview screen if desired
+             Get.to(() => ImagePreviewScreen());
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('No image captured')),
+            );
+          }
         },
         elevation: 8,
         child: const Icon(Icons.add, color: Colors.white, size: 28),

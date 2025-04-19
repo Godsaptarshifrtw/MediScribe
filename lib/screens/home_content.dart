@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:get/get.dart';
 import '../controllers/component_controllers/pdf_controller.dart';
-import '/controllers/component_controllers/pdf_controller.dart';
 
 class HomeContent extends StatelessWidget {
   const HomeContent({super.key});
@@ -97,8 +96,12 @@ class HomeContent extends StatelessWidget {
     );
   }
 
-  Widget _buildLargeFeatureTile(BuildContext context, _Feature feature,
-      double subtitleFont, double tilePadding, PdfController pdfController) {
+  Widget _buildLargeFeatureTile(
+      BuildContext context,
+      _Feature feature,
+      double subtitleFont,
+      double tilePadding,
+      PdfController pdfController) {
     return GestureDetector(
       onTap: () async {
         if (feature.title == "Select report from Gallery") {
@@ -121,7 +124,7 @@ class HomeContent extends StatelessWidget {
             );
           }
         } else {
-          // Navigate to Previous Reports etc.
+          // TODO: Navigate to Previous Reports screen
         }
       },
       child: Container(
