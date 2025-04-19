@@ -1,27 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../controllers/component_controllers/language_controller.dart';
 
-class LanguageScreen extends StatefulWidget {
-  const LanguageScreen({super.key});
 
-  @override
-  State<LanguageScreen> createState() => _LanguageScreenState();
-}
+class LanguageScreen extends StatelessWidget {
+  LanguageScreen({super.key});
 
-class _LanguageScreenState extends State<LanguageScreen> {
-  String? _selectedLanguage;
-
-  void _selectLanguage(String languageCode) {
-    setState(() {
-      _selectedLanguage = languageCode;
-    });
-  }
-
-  void _proceed() {
-    if (_selectedLanguage != null) {
-      Get.toNamed('/onboarding');
-    }
-  }
+  final LanguageController controller = Get.put(LanguageController());
 
   @override
   Widget build(BuildContext context) {
@@ -43,14 +28,23 @@ class _LanguageScreenState extends State<LanguageScreen> {
                 ),
               ),
 
+              const SizedBox(height: 20),
+
+              // Heading
+              const Center(
+                child: Text(
+                  'Choose Your Language',
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF5E35B1),
+                  ),
+                ),
+              ),
+
               const SizedBox(height: 40),
 
-              // "Choose Your Language" heading
-
-
-
-
-              // Centered Language Options
+              // Language Options
               Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -63,22 +57,23 @@ class _LanguageScreenState extends State<LanguageScreen> {
               ),
 
               // Continue Button
-              if (_selectedLanguage != null)
-                Center(
-                  child: ElevatedButton.icon(
-                    onPressed: _proceed,
-                    icon: const Icon(Icons.arrow_forward),
-                    label: const Text('Continue'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.deepPurple,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 14),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
+              Obx(() => controller.selectedLanguage.isNotEmpty
+                  ? Center(
+                child: ElevatedButton.icon(
+                  onPressed: controller.proceed,
+                  icon: const Icon(Icons.arrow_forward),
+                  label: const Text('Continue'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.deepPurple,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
                     ),
                   ),
                 ),
+              )
+                  : const SizedBox.shrink()),
             ],
           ),
         ),
@@ -87,36 +82,38 @@ class _LanguageScreenState extends State<LanguageScreen> {
   }
 
   Widget _buildLanguageButton(String text, String code, IconData icon) {
-    final bool isSelected = _selectedLanguage == code;
+    return Obx(() {
+      final bool isSelected = controller.selectedLanguage.value == code;
 
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
-      decoration: BoxDecoration(
-        color: isSelected ? Colors.deepPurple : Colors.deepPurple.shade100,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: isSelected
-            ? [
-          BoxShadow(
-            color: Colors.deepPurple.withOpacity(0.3),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          ),
-        ]
-            : [],
-      ),
-      child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-        leading: Icon(icon, color: isSelected ? Colors.white : Colors.black),
-        title: Text(
-          text,
-          style: TextStyle(
-            fontSize: 18,
-            color: isSelected ? Colors.white : Colors.black,
-            fontWeight: FontWeight.w600,
-          ),
+      return AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        decoration: BoxDecoration(
+          color: isSelected ? Colors.deepPurple : Colors.deepPurple.shade100,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: isSelected
+              ? [
+            BoxShadow(
+              color: Colors.deepPurple.withOpacity(0.3),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ]
+              : [],
         ),
-        onTap: () => _selectLanguage(code),
-      ),
-    );
+        child: ListTile(
+          contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+          leading: Icon(icon, color: isSelected ? Colors.white : Colors.black),
+          title: Text(
+            text,
+            style: TextStyle(
+              fontSize: 18,
+              color: isSelected ? Colors.white : Colors.black,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          onTap: () => controller.selectLanguage(code),
+        ),
+      );
+    });
   }
 }

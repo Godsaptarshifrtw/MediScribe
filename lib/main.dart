@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/language',
       getPages: [
-        GetPage(name: '/language', page: () => const LanguageScreen()),
+        GetPage(name: '/language', page: () =>  LanguageScreen()),
         GetPage(name: '/onboarding', page: () =>  OnboardingScreen()),
         GetPage(name: '/home', page: () =>  HomeScreen()),
       ],
