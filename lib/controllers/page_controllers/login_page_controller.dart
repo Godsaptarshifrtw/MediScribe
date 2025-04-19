@@ -1,24 +1,42 @@
 import 'package:get/get.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../../api/auth_api_service.dart';
+
 
 class LoginController extends GetxController {
-  var email = ''.obs;
-  var password = ''.obs;
+  var email     = ''.obs;
+  var password  = ''.obs;
   var isLoading = false.obs;
 
-  void login() async {
-    if (email.value.isEmpty || password.value.isEmpty) {
+  final AuthService _authService = AuthService();
+
+  Future<void> login() async {
+    // 1) Simple validation
+    if (email.value.trim().isEmpty || password.value.isEmpty) {
       Get.snackbar('Error', 'Email and password cannot be empty');
       return;
     }
 
     isLoading.value = true;
 
-    // Simulate login process
-    await Future.delayed(const Duration(seconds: 2));
+    try {
+      // 2) Delegate to AuthService
+      User user = await _authService.loginWithEmail(
+        email: email.value.trim(),
+        password: password.value,
+      );
 
-    isLoading.value = false;
-    Get.snackbar('Success', 'Logged in successfully');
-
-    // TODO: Navigate to home screen
+      // 3) On success
+      isLoading.value = false;
+      Get.snackbar('Welcome', 'Logged in as ${user.email}');
+      Get.offAllNamed('/home');
+    } on FirebaseAuthException catch (e) {
+      // 4) Handle auth errors
+      isLoading.value = false;
+      Get.snackbar('Login Failed', e.message ?? e.code);
+    } catch (e) {
+      isLoading.value = false;
+      Get.snackbar('Error', e.toString());
+    }
   }
 }

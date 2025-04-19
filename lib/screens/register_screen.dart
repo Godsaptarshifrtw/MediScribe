@@ -1,3 +1,4 @@
+import 'package:aignite2025_oops/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/page_controllers/register_page_controller.dart';
@@ -181,7 +182,7 @@ class RegisterScreen extends StatelessWidget {
                   // Already registered? Login Now
                   TextButton(
                     onPressed: () {
-                      // Navigate to Login page
+                      Get.to(LoginScreen());
                     },
                     child: const Text(
                       "Already have an account? Login Now",

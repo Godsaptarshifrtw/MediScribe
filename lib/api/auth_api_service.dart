@@ -3,11 +3,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../models/user_model.dart';
 
 class AuthService {
-  final FirebaseAuth    _auth   = FirebaseAuth.instance;
-  final CollectionReference _usersRef =
-  FirebaseFirestore.instance.collection('users');
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  /// Register with email & password, then store additional user data.
+  CollectionReference get _usersRef => _firestore.collection('users');
+
+  /// Register user with email & password and store user data in Firestore
   Future<User> registerWithEmail({
     required String name,
     required String email,
@@ -15,27 +16,71 @@ class AuthService {
     required int age,
     required String password,
   }) async {
-    // 1) Create the auth account
-    final cred = await _auth.createUserWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
+    try {
+      // Step 1: Create Firebase Auth account
+      final UserCredential cred = await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
 
-    final uid = cred.user!.uid;
+      final User user = cred.user!;
+      final String uid = user.uid;
 
-    // 2) Build your Firestore UserModel
-    final newUser = UserModel(
-      id: uid,
-      name: name,
-      email: email,
-      phone: phone,
-      age: age,
-      labHistory: {},
-    );
+      // Step 2: Create Firestore UserModel
+      final UserModel newUser = UserModel(
+        id: uid,
+        name: name,
+        email: email,
+        phone: phone,
+        age: age,
+        labHistory: {}, // Empty map by default
+      );
 
-    // 3) Store in Firestore under /users/{uid}
-    await _usersRef.doc(uid).set(newUser.toMap());
+      // Step 3: Store in Firestore at users/{uid}
+      await _usersRef.doc(uid).set(newUser.toMap());
 
-    return cred.user!;
+      return user;
+    } on FirebaseAuthException catch (e) {
+      throw FirebaseAuthException(code: e.code, message: e.message);
+    } catch (e) {
+      throw Exception('Registration failed: $e');
+    }
   }
+
+  /// Login user using email & password
+  Future<User> loginWithEmail({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      final UserCredential cred = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      return cred.user!;
+    } on FirebaseAuthException catch (e) {
+      throw FirebaseAuthException(code: e.code, message: e.message);
+    } catch (e) {
+      throw Exception('Login failed: $e');
+    }
+  }
+
+  /// Sign out the currently authenticated user
+  Future<void> signOut() async {
+    await _auth.signOut();
+  }
+
+  /// Check if a user is already signed in
+  User? getCurrentUser() {
+    return _auth.currentUser;
+  }
+
+ /* /// Fetch user data from Firestore
+  Future<UserModel?> fetchUserData(String uid) async {
+    final doc = await _usersRef.doc(uid).get();
+    if (doc.exists) {
+      return UserModel.fromMap(doc.data() as Map<String, dynamic>);
+    }
+    return null;
+  }*/
 }

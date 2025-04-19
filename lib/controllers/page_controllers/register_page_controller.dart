@@ -43,7 +43,7 @@ class RegisterController extends GetxController {
       );
 
       isLoading.value = false;
-      Get.snackbar('Success', 'Welcome, ${user.email}!');
+      Get.snackbar('Registration Successful!','Welcome to MediScribe');
       Get.offAllNamed('/login');
     } on FirebaseAuthException catch (e) {
       isLoading.value = false;
