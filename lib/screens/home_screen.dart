@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'home_content.dart';
 import '/controllers/component_controllers/pdf_controller.dart';
 import '/controllers/component_controllers/image_controller.dart';
+import 'img_preview.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
@@ -37,7 +38,7 @@ class HomeScreen extends StatelessWidget {
             );
 
             // TODO: Navigate to preview screen if desired
-            // Get.to(() => ImagePreviewScreen());
+             Get.to(() => ImagePreviewScreen());
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('No image captured')),
