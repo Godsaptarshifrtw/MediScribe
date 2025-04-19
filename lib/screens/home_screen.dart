@@ -11,7 +11,6 @@ class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
 
   final RxInt _selectedIndex = 0.obs;
-  final langController = Get.find<LanguageController>();
 
   final List<Widget> _screens = [
     const HomeContent(),
@@ -20,11 +19,15 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final langController = Get.find<LanguageController>(); // Safe here
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Obx(() => Text(
-          langController.selectedLanguage.value == 'bn' ? 'হোম স্ক্রীন' : 'Home Screen',
+          langController.selectedLanguage.value == 'bn'
+              ? 'হোম স্ক্রীন'
+              : 'Home Screen',
         )),
         actions: [
           Obx(() {
@@ -53,13 +56,13 @@ class HomeScreen extends StatelessWidget {
             Get.find<ImageController>().pickImage(imageFile);
 
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(_getTranslatedText('Image captured successfully'))),
+              SnackBar(content: Text(_getTranslatedText('Image captured successfully', langController))),
             );
 
             Get.to(() => ImagePreviewScreen());
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(_getTranslatedText('No image captured'))),
+              SnackBar(content: Text(_getTranslatedText('No image captured', langController))),
             );
           }
         },
@@ -79,9 +82,9 @@ class HomeScreen extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildNavItem(icon: Icons.home, label: 'Home', index: 0),
+                _buildNavItem(icon: Icons.home, label: 'Home', index: 0, langController: langController),
                 const SizedBox(width: 48),
-                _buildNavItem(icon: Icons.person, label: 'Profile', index: 1),
+                _buildNavItem(icon: Icons.person, label: 'Profile', index: 1, langController: langController),
               ],
             ),
           ),
@@ -94,10 +97,11 @@ class HomeScreen extends StatelessWidget {
     required IconData icon,
     required String label,
     required int index,
+    required LanguageController langController,
   }) {
     return Obx(() {
       final isSelected = _selectedIndex.value == index;
-      final translatedLabel = _getTranslatedText(label);
+      final translatedLabel = _getTranslatedText(label, langController);
       return GestureDetector(
         onTap: () => _selectedIndex.value = index,
         child: Column(
@@ -122,7 +126,7 @@ class HomeScreen extends StatelessWidget {
     });
   }
 
-  String _getTranslatedText(String text) {
+  String _getTranslatedText(String text, LanguageController langController) {
     final lang = langController.selectedLanguage.value;
 
     if (lang == 'bn') {

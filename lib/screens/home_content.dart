@@ -21,24 +21,18 @@ class HomeContent extends StatelessWidget {
 
     final List<_Feature> features = [
       _Feature(
-        langController.selectedLanguage.value == 'bn'
-            ? 'গ্যালারি থেকে রিপোর্ট নির্বাচন করুন'
-            : 'Select report from Gallery',
-        langController.selectedLanguage.value == 'bn'
-            ? 'স্ক্যান করুন এবং তথ্য পান'
-            : 'Scan and get insights',
-        Icons.upload_file,
-        const Color(0xFF7E57C2),
+        id: 'select_report',
+        title: 'Select report from Gallery',
+        subtitle: 'Scan and get insights',
+        icon: Icons.upload_file,
+        color: const Color(0xFF7E57C2),
       ),
       _Feature(
-        langController.selectedLanguage.value == 'bn'
-            ? 'পূর্ববর্তী রিপোর্ট'
-            : 'Previous Reports',
-        langController.selectedLanguage.value == 'bn'
-            ? 'আপনার পূর্বের রিপোর্ট অ্যাক্সেস করুন'
-            : 'Quick access to history',
-        Icons.history,
-        const Color(0xFF6A1B9A),
+        id: 'previous_reports',
+        title: 'Previous Reports',
+        subtitle: 'Quick access to history',
+        icon: Icons.history,
+        color: const Color(0xFF6A1B9A),
       ),
     ];
 
@@ -53,7 +47,8 @@ class HomeContent extends StatelessWidget {
               const SizedBox(height: 8),
               ...features.map((f) => Padding(
                 padding: const EdgeInsets.only(bottom: 28),
-                child: _buildLargeFeatureTile(context, f, subtitleFont, tilePadding, pdfController, langController),
+                child: _buildLargeFeatureTile(
+                    context, f, subtitleFont, tilePadding, pdfController, langController),
               )),
               const SizedBox(height: 120), // Additional space for layout balance
             ],
@@ -120,7 +115,10 @@ class HomeContent extends StatelessWidget {
       LanguageController langController) {
     return GestureDetector(
       onTap: () async {
-        if (feature.title == "Select report from Gallery") {
+        // Check translated title for select_report feature
+        if (_getTranslatedText(feature.id, feature.title) ==
+            _getTranslatedText('select_report', 'Select report from Gallery')) {
+
           FilePickerResult? result = await FilePicker.platform.pickFiles(
             type: FileType.custom,
             allowedExtensions: ['pdf'],
@@ -177,7 +175,7 @@ class HomeContent extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    langController.selectedLanguage.value == 'bn' ? 'গ্যালারি থেকে রিপোর্ট নির্বাচন করুন' : feature.title,
+                    _getTranslatedText(feature.id, feature.title),
                     style: GoogleFonts.roboto(
                       fontWeight: FontWeight.w600,
                       fontSize: subtitleFont + 4,
@@ -186,10 +184,11 @@ class HomeContent extends StatelessWidget {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    langController.selectedLanguage.value == 'bn' ? 'স্ক্যান করুন এবং তথ্য পান' : feature.subtitle,
+                    _getTranslatedSubtitle(feature.id, feature.subtitle),
                     style: GoogleFonts.roboto(
                       fontSize: subtitleFont,
                       color: Colors.black54,
+                      decoration: TextDecoration.underline, // Underlined text in Bengali
                     ),
                   ),
                 ],
@@ -200,13 +199,46 @@ class HomeContent extends StatelessWidget {
       ),
     );
   }
+
+  String _getTranslatedText(String id, String defaultText) {
+    final lang = Get.find<LanguageController>().selectedLanguage.value;
+    if (lang == 'bn') {
+      switch (id) {
+        case 'select_report':
+          return 'গ্যালারি থেকে রিপোর্ট নির্বাচন করুন';
+        case 'previous_reports':
+          return 'পূর্ববর্তী রিপোর্ট';
+      }
+    }
+    return defaultText;
+  }
+
+  String _getTranslatedSubtitle(String id, String defaultText) {
+    final lang = Get.find<LanguageController>().selectedLanguage.value;
+    if (lang == 'bn') {
+      switch (id) {
+        case 'select_report':
+          return 'স্ক্যান করুন এবং তথ্য পান';
+        case 'previous_reports':
+          return 'আপনার পূর্বের রিপোর্ট অ্যাক্সেস করুন';
+      }
+    }
+    return defaultText;
+  }
 }
 
 class _Feature {
+  final String id;
   final String title;
   final String subtitle;
   final IconData icon;
   final Color color;
 
-  _Feature(this.title, this.subtitle, this.icon, this.color);
+  _Feature({
+    required this.id,
+    required this.title,
+    required this.subtitle,
+    required this.icon,
+    required this.color,
+  });
 }

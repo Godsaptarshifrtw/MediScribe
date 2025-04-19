@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 import 'controllers/component_controllers/image_controller.dart';
+import 'controllers/component_controllers/language_controller.dart';
 import 'controllers/component_controllers/pdf_controller.dart';
 import 'screens/home_screen.dart';
  // <-- Import your translations file
@@ -20,6 +21,7 @@ void main() async {
   // Register your controllers
   Get.put(PdfController());
   Get.put(ImageController());
+  Get.put(LanguageController());
 
   runApp(const MyApp());
 }
@@ -39,7 +41,7 @@ class MyApp extends StatelessWidget {
       translations: AppTranslations(), // <-- This class contains your i18n map
       locale: const Locale('en'),      // 🌐 Initial language (you can change dynamically)
       fallbackLocale: const Locale('en'), // 👇 In case translation key not found
-      initialRoute: '/language',
+      initialRoute: '/home',
       getPages: [
         GetPage(name: '/language', page: () =>  LanguageScreen()),
         GetPage(name: '/onboarding', page: () =>  OnboardingScreen()),
