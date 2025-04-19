@@ -19,7 +19,11 @@ class OnboardingScreen extends StatelessWidget {
                 onPageChanged: (index) => controller.currentPage.value = index,
                 itemBuilder: (_, index) {
                   var data = controller.onboardingData[index];
-                  return _buildPageContent(data['title']!, data['description']!, data['image']!);
+                  return _buildPageContent(
+                    data['title']!,
+                    data['description']!,
+                    data['image']!,
+                  );
                 },
               ),
             ),
@@ -62,14 +66,14 @@ class OnboardingScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  controller.currentPage.value == controller.onboardingData.length - 1
+                  controller.currentPage.value ==
+                      controller.onboardingData.length - 1
                       ? ElevatedButton(
-                    onPressed: () {
-                      // Navigate to next screen
-                    },
+                    onPressed: controller.nextPage,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.deepPurple,
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 12),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),

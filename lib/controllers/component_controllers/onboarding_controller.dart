@@ -29,11 +29,22 @@ class OnboardingController extends GetxController {
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeIn,
       );
+    } else {
+      Get.offAllNamed('/login'); // 🟣 Navigate when at last page
     }
   }
 
   void skip() {
-    currentPage.value = onboardingData.length - 1;
-    pageController.jumpToPage(onboardingData.length - 1);
+    Get.offAllNamed('/login'); // 🟣 Immediately go to Login
+  }
+
+  void disposeController() {
+    pageController.dispose();
+  }
+
+  @override
+  void onClose() {
+    disposeController();
+    super.onClose();
   }
 }
