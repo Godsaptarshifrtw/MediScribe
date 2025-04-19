@@ -74,7 +74,7 @@ class HomeContent extends StatelessWidget {
           ),
           Builder(
             builder: (context) => IconButton(
-              icon: const Icon(Icons.menu, color: Color(0xFF9575CD)),
+              icon: const Icon(Icons.more_vert, color: Color(0xFF9575CD)),  // Feature menu icon
               onPressed: () {
                 final RenderBox button = context.findRenderObject() as RenderBox;
                 final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
@@ -90,8 +90,9 @@ class HomeContent extends StatelessWidget {
                     0,
                   ),
                   items: [
-                    PopupMenuItem(value: 'en', child: Text(langController.selectedLanguage.value == 'bn' ? 'Switch to English' : 'ইংরেজিতে পরিবর্তন')),
-                    PopupMenuItem(value: 'hi', child: const Text('हिंदी')),
+                    PopupMenuItem(value: 'settings', child: Text('Settings')),
+                    PopupMenuItem(value: 'profile', child: Text('Profile')),
+                    PopupMenuItem(value: 'logout', child: Text('Log Out')),
                   ],
                   color: const Color(0xFFF3E5F5),
                   shape: RoundedRectangleBorder(
